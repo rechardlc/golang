@@ -16,3 +16,4 @@ vendor/
 .DS_store
 ./Project/**/vendor
 ./**/vendor
+.idea
