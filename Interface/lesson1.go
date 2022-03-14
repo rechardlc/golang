@@ -47,7 +47,8 @@ func TestDone() {
 }
 
 // 空接口：接受任意值：如~func.md(x Interface{})Interface{}/make(map[string]Interface{})/....
-// 通过类型断言判断~空接口对应的值 x.(Type)
+// x.(T),判断T是否是实现了x接口，所以x必须为接口类型
+// 通过类型断言判断~空接口对应的值 x.(Type):
 func judgeType(i interface{}) {
 	switch v := i.(type) {
 	case string:

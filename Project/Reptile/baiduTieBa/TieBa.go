@@ -1,7 +1,8 @@
-package baiduTieBa
+package main
 
 import (
 	"encoding/json"
+	"example.com/m/v2/sqlConfig"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -31,6 +32,17 @@ type Person struct {
 	Level  Level       `json:"level"`
 }
 
+type Tiba struct {
+	Number string `db:"number"`
+	Email  string `db:"email"`
+	Name   string `db:"name"`
+}
+type Tiba_Level struct {
+	Value      string `db:"value"`
+	EmpiricVal string `db:"empiric_val"`
+	Tid        string `db:"t_id"`
+}
+
 func getEmail() {
 	if err := recover(); err != nil {
 		fmt.Println(err)
@@ -44,30 +56,10 @@ func getEmail() {
 	}(resp.Body)
 	pageBytes, err := ioutil.ReadAll(resp.Body)
 	HandleError(err, "ioutil.ReadAll")
-	//if err := ioutil.WriteFile("test.html", pageBytes, 0666); err != nil {
-	//	panic(err) // 通过ioutil.WriteFile将数据写入文件中
-	//}
-	//pageStr := string(pageBytes)
 	pageStr := strings.Split(string(pageBytes), "j_p_postlist")
 	pageStr = strings.Split(pageStr[1], "right_bright")
 	pageStr = strings.Split(pageStr[0], "l_post_bright")
 	dealStrings(pageStr)
-	//re := regexp.MustCompile(reQQEmail)              // 解析并返回一个正则表达式，全局正则表达式安全初始化
-	//results := re.FindAllStringSubmatch(pageStr, -1) // n小于0，返回所有匹配想，n大于0，查找前n项
-	//qq := make([]Person, 0)
-	//for _, result := range results {
-	//	if isInSlice(qq, result[1]) {
-	//		qq = append(qq, Person{
-	//			Number: result[1],
-	//			Email:  result[0],
-	//		})
-	//	}
-	//}
-	//bytes, _ := json.Marshal(qq)
-	//if err := ioutil.WriteFile("test.json", bytes, 0); err != nil {
-	//	return
-	//}
-	//fmt.Println(string(bytes))
 }
 
 func dealStrings(divs []string) {
@@ -106,6 +98,11 @@ func dealStrings(divs []string) {
 		s = append(s, v)
 	}
 	s = sliceRemoveRepeat(s)
+	id, err := intoRecordToTieBa("richard", "1119641305", "1119641305@qq.com")
+	if err != nil || id == -1 {
+		return
+	}
+	intoRecordToTiebaLevel(id, "10", "100")
 	jsonRes, _ := json.Marshal(s)
 	ioutil.WriteFile("test.json", jsonRes, 0666)
 }
@@ -135,6 +132,66 @@ func HandleError(err error, why string) {
 	}
 }
 
+//  createTableTieBa
+//  @Description:
+//
+func createTableTieBa() {
+	schema := `CREATE TABLE tieba (
+		id int primary key auto_increment,
+		name varchar(50),
+		email varchar(50),
+		number varchar(50)
+	);`
+	if _, err := sqlConfig.Db.Exec(schema); err != nil {
+		panic(err)
+		return
+	}
+	schema = `create table tieba_level(
+		id int primary key auto_increment,
+		value varchar(50),
+		empiricVal varchar(100)   
+	)`
+	if _, err := sqlConfig.Db.Exec(schema); err != nil {
+		panic(err)
+		return
+	}
+}
+
+//
+//  intoRecordToTieBa
+//  @author:
+//  @Description:
+//  @param name
+//  @param number
+//  @param email
+//  @return interface{}
+//  @return error
+//
+func intoRecordToTieBa(name, number, email string) (int, error) {
+	sql := `insert into tieba (name, number, email) value(?,?,?)`
+	exec, err := sqlConfig.Db.Exec(sql, name, number, email)
+	if err != nil {
+		return -1, err
+	} else {
+		var id, _ = exec.LastInsertId()
+		return int(id), nil
+	}
+}
+func intoRecordToTiebaLevel(id int, value, EmpiricVal string) error {
+	sql := `insert into tieba_level (value, empiric_val, t_id) value (?,?,?)`
+	_, err := sqlConfig.Db.Exec(sql, value, EmpiricVal, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func main() {
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Println(err, "<---main catch~err")
+		}
+	}()
+	//createTableTieBa()
 	getEmail()
 }
