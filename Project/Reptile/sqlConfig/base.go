@@ -1,16 +1,18 @@
 package sqlConfig
 
 import (
+	"example.com/m/v2/utils"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	"strings"
 )
 
+var ip = "192.168.3.138"
+
 const (
 	userName = "root"
 	password = ""
-	ip       = "192.168.3.138"
 	port     = "3306"
 	dbName   = "reptile"
 )
@@ -23,8 +25,17 @@ func init() {
 			fmt.Println(r, "catch:链接数据库异常~")
 		}
 	}()
+	if _ip, ok := utils.GetIPv4Addr().(string); ok {
+		ip = _ip
+	} else {
+		panic(_ip)
+	}
+	var err error
 	path := strings.Join([]string{userName, ":", password, "@tcp(", ip, ":", port, ")/", dbName, "?charset=utf8"}, "")
-	Db, _ = sqlx.Open("mysql", path)
+	Db, err = sqlx.Open("mysql", path)
+	if err != nil {
+		panic(err)
+	}
 	Db.SetConnMaxLifetime(100)
 	Db.SetMaxIdleConns(10)
 }

@@ -26,10 +26,10 @@ type Level struct {
 }
 
 type Person struct {
-	Number interface{} `json:"number"` // 可以验证结构体~ https://blog.csdn.net/netdxy/article/details/78528211
-	Email  string      `json:"email"`
-	Name   string      `json:"name"`
-	Level  Level       `json:"level"`
+	Number string `json:"number"` // 可以验证结构体~ https://blog.csdn.net/netdxy/article/details/78528211
+	Email  string `json:"email"`
+	Name   string `json:"name"`
+	Level  Level  `json:"level"`
 }
 
 type Tiba struct {
@@ -98,11 +98,23 @@ func dealStrings(divs []string) {
 		s = append(s, v)
 	}
 	s = sliceRemoveRepeat(s)
-	id, err := intoRecordToTieBa("richard", "1119641305", "1119641305@qq.com")
-	if err != nil || id == -1 {
-		return
+	for _, v := range s {
+		v := v
+		wg.Add(1)
+		go func() {
+			if id, ok := intoRecordToTieBa(v.Name, v.Number, v.Email).(int); ok {
+				if err := intoRecordToTiebaLevel(id, v.Level.Value, v.Level.EmpiricVal); err != nil {
+					panic(err)
+				}
+			} else {
+				fmt.Println(id, ok)
+				panic(id)
+			}
+			wg.Done()
+		}()
 	}
-	intoRecordToTiebaLevel(id, "10", "100")
+	wg.Wait()
+	// 输入到json中~
 	jsonRes, _ := json.Marshal(s)
 	ioutil.WriteFile("test.json", jsonRes, 0666)
 }
@@ -167,14 +179,14 @@ func createTableTieBa() {
 //  @return interface{}
 //  @return error
 //
-func intoRecordToTieBa(name, number, email string) (int, error) {
+func intoRecordToTieBa(name, number, email string) interface{} {
 	sql := `insert into tieba (name, number, email) value(?,?,?)`
 	exec, err := sqlConfig.Db.Exec(sql, name, number, email)
 	if err != nil {
-		return -1, err
+		return err
 	} else {
 		var id, _ = exec.LastInsertId()
-		return int(id), nil
+		return int(id)
 	}
 }
 func intoRecordToTiebaLevel(id int, value, EmpiricVal string) error {

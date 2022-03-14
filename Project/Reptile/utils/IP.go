@@ -12,8 +12,7 @@ func GetIPv4Addr() interface{} {
 		}
 	}()
 	if addrs, err := net.InterfaceAddrs(); err != nil {
-		panic(err)
-		return nil
+		return err
 	} else {
 		for _, addr := range addrs {
 			if ipNet, ok := addr.(*net.IPNet); ok && !ipNet.IP.IsLoopback() {
