@@ -13,7 +13,9 @@
 
 # Dependency directories (remove the comment below to include it)
 vendor/
-.DS_store
+.DS_Store
 ./Project/**/vendor
 ./**/vendor
 .idea
+./**/.idea
+./**/.DS_Store
