@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"regexp"
 )
 
 // FormatFunc 定义函数类型: 函数签名
@@ -48,5 +49,28 @@ func TestDefer() {
 	whatever := [5]int{}
 	for i := range whatever {
 		defer fmt.Println(i) // 4/3/2/1/0 栈执行顺序(先进后出)
+	}
+}
+
+// 闭包小测试: 接受一个文件后缀名(比如:.jpg),若存在后缀，返回文件名，若不存在后缀，加上后缀返回~
+type suffixFunc func(fileName string) string
+
+func makeSuffix(suffix string) suffixFunc {
+	//re, _ := regexp.Compile(suffix + "$")
+	return func(fileName string) string {
+		// 实现方式：1、正则 2.strings.HasSuffix函数
+		//if ok := strings.HasSuffix(fileName, suffixInner); ok {
+		//	return fileName
+		//}
+		//return fileName + suffixInner
+		//if ok := re.MatchString(fileName); ok {
+		//	return fileName
+		//}
+		//return fileName + suffix
+
+		if ok, _ := regexp.MatchString(suffix, fileName); ok {
+			return fileName
+		}
+		return fileName + suffix
 	}
 }

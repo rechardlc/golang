@@ -8,8 +8,8 @@ import (
 func main() {
 	now := time.Now()
 	// 读取年月日时分秒
-	year, month, day, hour, minute, second := now.Year(), now.Month(), now.Day(), now.Hour(), now.Minute(), now.Second()
-	format := fmt.Sprintf("%d-%02d-%02d %02d:%02d:%02d\n\n", year, month, day, hour, minute, second)
+	year, month, day, hour, minute, second, ms := now.Year(), now.Month(), now.Day(), now.Hour(), now.Minute(), now.Second(), now.Nanosecond()
+	format := fmt.Sprintf("%d-%02d-%02d %02d:%02d:%02d:%02d\n\n", year, month, day, hour, minute, second, ms)
 	fmt.Println("format:", format)
 	// 读取时间戳
 	timeStamp1 := now.Unix()
