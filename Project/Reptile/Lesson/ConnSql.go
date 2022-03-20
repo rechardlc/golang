@@ -43,18 +43,7 @@ func init() {
 	Db.SetConnMaxLifetime(100)
 	Db.SetMaxIdleConns(10)
 	fmt.Println("connect mysql success~")
-	//createTieBaTable()
-}
-
-func createTieBaTable() {
-	fmt.Println(Db, "Db~~~~result")
-	schema := `CREATE TABLE place (
-    id int primary key auto_increment,
-    country varchar(50),
-    city varchar(50) NULL default '',
-    telcode int);`
-	res, err := Db.Exec(schema)
-	fmt.Println("res:", res, "err:", err)
+	createTieBaTable()
 }
 
 func main() {
@@ -63,13 +52,68 @@ func main() {
 			fmt.Println(err, "catch~main~中的内容")
 		}
 	}()
-	//createTieBaTable()
+	createTieBaTable()
+	selectNameQuery()
+	query()
 	//fmt.Println("main")
 	//insertIntoPlace("中国", "广州", 998)
 	//updatePlaceRow(100, "武汉", 2)
 	//query()
-	TestQueryx_Rowx()
+	//TestQueryx_Rowx()
+	//batchInertInto()
 }
+
+func batchInertInto() {
+	res, err := Db.NamedExec(
+		`insert into place (country, city, telcode) values (:country, :city, :telcode)`,
+		[]Place{{Telcode: 1, City: "南京", Country: "中国"}, {Telcode: 199, City: "伦敦", Country: "英国"}},
+	)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(res)
+}
+
+// 在库中提供最常用的就是NamedQuery和NamedExec函数，一个是执行对查询参数命名并绑定，另一个则是对 CUD 操作的查询参数名的绑定：
+//
+//  selectNameQuery
+//  @Description: 绑定查询
+//  type Place struct {
+//		Id      int    `db:"id"`
+//		City    string `db:"city"`
+//		Telcode int    `db:"telcode"`
+//		Country string `db:"country"`
+// }
+//
+func selectNameQuery() {
+	sqlStr := `select id, city, telcode, country from place where id = :id`
+	rows, err := Db.NamedQuery(sqlStr, map[string]interface{}{
+		"id": 1,
+	})
+	if err != nil {
+		return
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var p Place
+		if err = rows.StructScan(&p); err != nil {
+			fmt.Println("struct failed:", err)
+		}
+		fmt.Println(p)
+	}
+}
+
+func createTieBaTable() {
+	fmt.Println(Db, "Db~~~~result")
+	schema := `CREATE TABLE if not exists place (
+    id int primary key auto_increment,
+    country varchar(50),
+    city varchar(50) NULL default '',
+    telcode int);`
+	res, err := Db.Exec(schema)
+	fmt.Println("res:", res, "err:", err)
+}
+
 func TestQueryx_Rowx() {
 	defer func() {
 		if err := recover(); err != nil {
@@ -136,6 +180,5 @@ func query() {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(total, p, pes)
-	fmt.Printf("%#v\n", p)
+	fmt.Println("total:", total, "\n", "p:", p, "\n", "pes:", pes)
 }

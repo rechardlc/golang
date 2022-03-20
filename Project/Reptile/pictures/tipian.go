@@ -40,7 +40,6 @@ func main() {
 		}
 		WaitGroup.Add(1)
 		go downloadUrls(url)
-
 	}
 	WaitGroup.Wait()
 }

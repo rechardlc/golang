@@ -45,4 +45,7 @@ func main() {
 	}
 	fmt.Println(timeObj)
 	fmt.Println(timeObj.Sub(now), "time~")
+	// 返回now到现在的时间, sub与Since相同
+	timeObj.Sub(now)
+	time.Since(now)
 }
