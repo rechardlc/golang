@@ -11,3 +11,6 @@ func testArr(nums []int) {
 	nums[0] = 10
 	fmt.Println(nums)
 }
+func dic(a, b int) (q, r int) {
+	return a / b, a + b
+}

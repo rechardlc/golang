@@ -1,3 +1,24 @@
+# 函数func
+1. 函数接受值与var定义类似
+```go
+func calc(a, b int, operation string) {
+	switch operation {
+	    case "-": a - b
+		case "*": a * b
+    }
+}
+```
+2. 可以返回多个值,一般来说func的第二个值用于返回错误
+3. 返回值可以提前声明，但是不建议这样子声明，一旦函数体过于长，容易导致变量混乱，不易于维护
+```go
+func manyReturns()(q, e, c int) {
+	q ++
+	e ++
+	c ++
+	return
+}
+```
+4. 函数可以作为参数
 Golang函数调动的机制
 1. 函数调用是值拷贝:基本数据类型和数组都是值传递
    * 值拷贝结果如下: 指针地址完全不一样

@@ -19,8 +19,11 @@ var arr4 = [...]struct {
 }
 
 var arr5 = [...][2]int{{1, 2}, {23, 00}}
+var arr6 = [2]int{1, 2}
+var arr7 = [2]int{1, 2}
 
 func main() {
+	fmt.Println("arr6 == arr7:", arr6 == arr7) // true :  1、数组长度也是类型 2、数组的长度是值类型可以直接==
 	fmt.Println(arr3, len(arr3), arr2, len(arr2), arr1, len(arr1), arr4, arr5)
 	var arr6 [5]int
 	printArr(&arr6)
