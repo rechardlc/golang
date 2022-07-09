@@ -17,3 +17,4 @@ switch {
 	case j := 1 : done() 
 }
 ```
+6. for死循环在go的并发编程中应用很广
