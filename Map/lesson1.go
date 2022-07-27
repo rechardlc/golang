@@ -10,7 +10,7 @@ func main() {
 
 /*
 	创建map2种方式
-		1. make
+		1. make eg: make(map[string]int)
 		2. 直接申明： map[string]int{}
 */
 func createWays() {
@@ -29,6 +29,7 @@ func createWays() {
 	way2["age"] = "age"
 	way2["name"] = "boll"
 	// 通过range遍历map，类似于js中Object.entries
+	// 遍历出来的结果是无序的
 	for key, val := range way2 {
 		fmt.Println(key, val)
 	}
@@ -57,4 +58,10 @@ func createWays() {
 	fmt.Println(len(way5))
 	way5["age"] = 18
 	fmt.Println(way5, len(way5))
+	/*
+		map的key
+		1. map使用哈希表，必须可以比较相等
+		2. 除了slice、map、function的内建类型都可以作为key
+		3. struct类型不包含上述类型字段，也可以作为key
+	*/
 }

@@ -12,10 +12,10 @@ func main() {
 	//fmt.Println(reflect.TypeOf(a), reflect.TypeOf(b), c)
 	//traversalString()
 	changeString()
-	indexToByte()
-	var temp = "fdsfsfds"
-	var t = temp[0:3]
-	fmt.Println(temp, t)
+	//indexToByte()
+	//var temp = "fdsfsfds"
+	//var t = temp[0:3]
+	//fmt.Println(temp, t)
 }
 
 func traversalString() {
