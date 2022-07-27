@@ -1,3 +1,7 @@
+/*
+	go语言接口类似于duck typing形式，在go语言中称为结构化类型系统
+
+*/
 package main
 
 import (

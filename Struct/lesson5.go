@@ -4,8 +4,11 @@
 */
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
+// 二叉树结构体
 type treeNode struct {
 	value       int
 	left, right *treeNode
