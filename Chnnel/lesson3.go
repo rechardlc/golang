@@ -15,7 +15,7 @@ type Job struct {
 type Result struct {
 	job *Job
 	sum int
-}
+
 
 // 创建工作池
 /**

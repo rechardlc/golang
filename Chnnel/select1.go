@@ -14,7 +14,7 @@ func test2(ch chan string) {
 	ch <- "test2"
 }
 
-// 多个channel是随机选择一个执行的
+// 多个channel是随机选择一个可执行的case去执行，如果没有case可执行并且没有default的情况下，会发生阻塞
 func main() {
 	//out1, out2 := make(chan string), make(chan string)
 	//for {
