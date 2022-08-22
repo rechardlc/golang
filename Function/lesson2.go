@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type Test struct {
 	name string
@@ -25,4 +27,22 @@ func main() {
 	}()
 	n1 = n2 + n1
 	fmt.Println(n1, "done")
+	inputParams("a", "b", "c", "d", "f", "g")
+}
+
+type N interface{}
+
+// 多参数传递
+func inputParams(n ...string) {
+	input := [...]string{"h", "i", "j", "k", "l", "m"}
+	j := 0
+	for len(n) > 0 {
+		i := n[0]
+		n = n[1:]
+		fmt.Printf("队列头=%s， 剩余队列数据=%s\n", i, n)
+		if j < len(input) {
+			n = append(n, input[j])
+			j++
+		}
+	}
 }

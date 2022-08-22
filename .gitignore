@@ -19,3 +19,4 @@ vendor/
 .idea
 ./**/.idea
 ./**/.DS_Store
+fib1.txt
