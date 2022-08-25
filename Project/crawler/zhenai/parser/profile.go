@@ -4,6 +4,7 @@ import (
 	"crawler/engine"
 	"crawler/model"
 	"crawler/utils"
+	"log"
 	"regexp"
 	"strconv"
 	"strings"
@@ -18,15 +19,19 @@ var constellationRe = regexp.MustCompile(`<div class="m-btn purple" data[^>]+>([
 
 var errorRe = regexp.MustCompile(`\{"buttonContent":"点击此处对该用户进行举`)
 
-func ParserProfile(contents []byte, other map[string]interface{}) (result engine.ParseResult) {
+func Profile(contents []byte, other map[string]interface{}) (result engine.ParseResult) {
 	var profile model.Profile
-
 	errorMatch := errorRe.FindSubmatch(contents)
 	if len(errorMatch) > 0 {
 		return result
 	}
 
 	baseMatches := baseInfoRe.FindSubmatch(contents)
+	//fmt.Printf("基础匹配结果: %s\n", baseMatches)
+	if len(baseMatches) < 1 {
+		log.Printf("contents 数据: %s\n", contents)
+		return result
+	}
 	bases := strings.Split(string(baseMatches[1]), "|")
 	profile.Age, _ = strconv.Atoi(strings.TrimSuffix(strings.TrimSpace(bases[1]), "岁"))
 	if val, ok := other["nickName"]; ok {
@@ -65,7 +70,6 @@ func ParserProfile(contents []byte, other map[string]interface{}) (result engine
 	if ok := utils.OutRange(constellationMatch, 1); ok {
 		profile.Constellation = string(constellationMatch[1])
 	}
-
 	result.Items = append(result.Items, profile)
 	return
 }

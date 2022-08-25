@@ -14,16 +14,18 @@ func City(contents []byte) (result engine.ParseResult) {
 	for _, m := range matches {
 		nickName := string(m[2])
 		gender := string(m[3])
+		url := string(m[1])
 		result.Requests = append(result.Requests, engine.Request{
 			Url: string(m[1]),
 			ParserFunc: func(contents []byte) engine.ParseResult {
-				return ParserProfile(contents, map[string]interface{}{
+				return Profile(contents, map[string]interface{}{
 					"nickName": nickName,
 					"gender":   gender,
+					"url":      url,
 				})
 			},
 		})
-		result.Items = append(result.Items, "User: "+nickName)
+		//result.Items = append(result.Items, "User: "+nickName)
 	}
 	return
 }
