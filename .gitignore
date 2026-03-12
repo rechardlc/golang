@@ -20,3 +20,9 @@ vendor/
 ./**/.idea
 ./**/.DS_Store
 fib1.txt
+.agent/
+bin/
+*.test
+*.out
+.history/
+
